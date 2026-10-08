@@ -277,6 +277,7 @@
     .screen-view {
       display: none;
       padding: 18px;
+      padding-bottom: 110px; /* ruang untuk FAB */
     }
     .screen-view.active {
       display: block;
@@ -670,52 +671,174 @@
     }
 
     /* ==========================================================
-       RECEIPT BOX
+       RECEIPT BOX (BASE64 UPLOAD)
        ========================================================== */
     .receipt-box {
       border: 2px dashed var(--border-glass);
-      border-radius: 14px;
+      border-radius: 16px;
       padding: 16px;
       text-align: center;
       position: relative;
-      cursor: pointer;
       background: var(--bg-receipt-box);
-      transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s var(--ease-bounce);
+      transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s var(--ease-bounce), box-shadow 0.3s ease;
     }
     .receipt-box:hover {
       border-color: var(--primary);
-      transform: translateY(-2px);
       box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2);
+    }
+    .receipt-box.has-image {
+      border-style: solid;
+      border-color: rgba(139, 92, 246, 0.45);
     }
 
     .receipt-preview-img {
-      max-height: 180px;
+      max-height: 200px;
       max-width: 100%;
-      border-radius: 8px;
-      object-fit: cover;
-      margin-top: 10px;
-      display: none;
+      border-radius: 12px;
+      object-fit: contain;
       border: 1px solid var(--border-glass);
       animation: cardEnter 0.5s var(--ease-out);
+      background: rgba(0,0,0,0.15);
     }
 
     .receipt-icon-circle {
       width: 46px;
       height: 46px;
       border-radius: 50%;
-      background: var(--grad-primary);
+      background: var(--grad-expense);
       color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto 8px auto;
-      box-shadow: 0 6px 18px rgba(139, 92, 246, 0.4);
+      box-shadow: 0 6px 18px rgba(239, 68, 68, 0.4);
       animation: floatIcon 3s ease-in-out infinite;
     }
     @keyframes floatIcon {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-4px); }
     }
+
+    .receipt-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .receipt-btn {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border-glass);
+      cursor: pointer;
+      transition: all 0.3s var(--ease-out);
+      font-family: inherit;
+    }
+    .receipt-btn svg { width: 15px; height: 15px; stroke-width: 2.2; }
+    .receipt-btn:hover {
+      border-color: var(--primary);
+      box-shadow: 0 0 16px rgba(139, 92, 246, 0.3);
+      transform: translateY(-1px);
+    }
+    .receipt-btn:active { transform: scale(0.96); }
+    .receipt-btn.danger {
+      color: var(--red-400);
+      border-color: rgba(239, 68, 68, 0.4);
+      background: rgba(239, 68, 68, 0.12);
+    }
+    .receipt-btn.danger:hover { box-shadow: 0 0 16px rgba(239, 68, 68, 0.35); }
+
+    .receipt-meta {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      text-align: center;
+      margin-top: 8px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    /* ==========================================================
+       FLOATING ACTION BUTTONS (KANAN)
+       ========================================================== */
+    .fab-layer {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(var(--tabbar-total) + 18px);
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+      padding-right: calc(16px + var(--safe-right));
+      pointer-events: none;
+      z-index: 46;
+    }
+
+    .fab-btn {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 20px 13px 16px;
+      border: none;
+      border-radius: 9999px;
+      color: #ffffff;
+      font-size: 0.84rem;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      cursor: pointer;
+      font-family: inherit;
+      position: relative;
+      overflow: hidden;
+      animation: fabIn 0.55s var(--ease-bounce) backwards;
+      transition: transform 0.3s var(--ease-bounce), box-shadow 0.3s ease, filter 0.3s ease;
+    }
+    .fab-btn:nth-child(1) { animation-delay: 0.08s; }
+    .fab-btn:nth-child(2) { animation-delay: 0.16s; }
+
+    @keyframes fabIn {
+      from { opacity: 0; transform: translateX(40px) scale(0.8); }
+      to { opacity: 1; transform: translateX(0) scale(1); }
+    }
+
+    .fab-btn svg {
+      width: 19px; height: 19px;
+      stroke: currentColor;
+      stroke-width: 2.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      flex-shrink: 0;
+    }
+
+    .fab-btn:hover { transform: translateY(-2px) scale(1.04); }
+    .fab-btn:active { transform: scale(0.94); }
+
+    .fab-btn.fab-expense {
+      background: var(--grad-expense);
+      background-size: 200% 200%;
+      box-shadow: 0 12px 28px -8px rgba(239, 68, 68, 0.85), 0 0 0 1px rgba(255,255,255,0.08) inset;
+      animation: fabIn 0.55s var(--ease-bounce) backwards, brandFlow 6s ease-in-out infinite;
+    }
+    .fab-btn.fab-expense:hover { box-shadow: 0 16px 34px -8px rgba(239, 68, 68, 1); }
+
+    .fab-btn.fab-sale {
+      background: var(--grad-sales);
+      background-size: 200% 200%;
+      box-shadow: 0 12px 28px -8px rgba(59, 130, 246, 0.85), 0 0 0 1px rgba(255,255,255,0.08) inset;
+      animation: fabIn 0.55s var(--ease-bounce) backwards, brandFlow 6s ease-in-out infinite;
+    }
+    .fab-btn.fab-sale:hover { box-shadow: 0 16px 34px -8px rgba(34, 211, 238, 1); }
 
     /* ==========================================================
        CHIPS
@@ -880,6 +1003,7 @@
       transition: color 0.3s ease;
       gap: 4px;
       flex: 1;
+      font-family: inherit;
     }
 
     .tab-btn svg {
@@ -1080,6 +1204,7 @@
       transition: all 0.35s var(--ease-out);
       position: relative;
       z-index: 1;
+      font-family: inherit;
     }
     .auth-mode-btn.active {
       background: var(--grad-primary);
@@ -1166,7 +1291,7 @@
         min-height: 0 !important;
         overflow: visible !important;
       }
-      #app-container, #auth-screen, .modal-overlay, #toast, #splash { display: none !important; }
+      #app-container, #auth-screen, .modal-overlay, #toast, #splash, .fab-layer { display: none !important; }
       #print-report { display: block !important; color: #000; }
     }
   </style>
@@ -1394,21 +1519,55 @@
             <label class="form-label" for="expense-details">Details / Vendor *</label>
             <input type="text" id="expense-details" class="form-input" placeholder="e.g., Fabric Supplier payment #409" required>
           </div>
+
+          <!-- ================= BASE64 RECEIPT UPLOAD ================= -->
           <div class="form-group">
-            <label class="form-label">Vendor Bill / Receipt (Camera / Upload)</label>
-            <div class="receipt-box" onclick="triggerReceiptCapture('expense')">
-              <div class="receipt-icon-circle">
-                <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <label class="form-label">Vendor Bill / Receipt — Base64 Image</label>
+            <div class="receipt-box" id="expense-receipt-box">
+
+              <!-- EMPTY STATE -->
+              <div id="expense-receipt-empty">
+                <div class="receipt-icon-circle">
+                  <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                </div>
+                <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-main);">Attach Bill / Receipt</div>
+                <div style="font-size: 0.7rem; color: var(--text-dim); margin-top: 2px;">Auto-compressed JPEG &middot; disimpan sebagai Base64</div>
+
+                <div class="receipt-actions">
+                  <button type="button" class="receipt-btn" onclick="triggerReceiptCapture('expense','camera')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    <span>Camera</span>
+                  </button>
+                  <button type="button" class="receipt-btn" onclick="triggerReceiptCapture('expense','gallery')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                    <span>Gallery</span>
+                  </button>
+                </div>
               </div>
-              <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-main);">Snap Bill / Receipt</div>
-              <div style="font-size: 0.7rem; color: var(--text-dim); margin-top: 2px;">Compressed &amp; saved to your account</div>
-              <img id="expense-receipt-preview" class="receipt-preview-img" alt="Expense receipt preview">
-              <input type="file" id="expense-receipt-input" accept="image/*" capture="environment" style="display: none;" onchange="handleReceiptFile(event, 'expense')">
-            </div>
-            <div id="expense-receipt-reset" style="display: none; text-align: right; margin-top: 6px;">
-              <button type="button" class="btn btn-secondary" style="width: auto; padding: 4px 10px; font-size: 0.7rem;" onclick="clearReceipt('expense')">Remove Receipt</button>
+
+              <!-- PREVIEW STATE -->
+              <div id="expense-receipt-preview-wrap" style="display: none;">
+                <img id="expense-receipt-preview" class="receipt-preview-img" alt="Expense receipt preview">
+                <div id="expense-receipt-meta" class="receipt-meta">Base64 • 0 KB</div>
+                <div class="receipt-actions">
+                  <button type="button" class="receipt-btn" onclick="triggerReceiptCapture('expense','camera')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+                    <span>Retake</span>
+                  </button>
+                  <button type="button" class="receipt-btn danger" onclick="clearReceipt('expense')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg>
+                    <span>Remove</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- HIDDEN INPUTS -->
+              <input type="file" id="expense-receipt-camera-input" accept="image/*" capture="environment" style="display:none" onchange="handleReceiptFile(event,'expense')">
+              <input type="file" id="expense-receipt-gallery-input" accept="image/*" style="display:none" onchange="handleReceiptFile(event,'expense')">
             </div>
           </div>
+          <!-- ================= END BASE64 RECEIPT ================= -->
+
           <button type="submit" class="btn btn-expense" id="expense-submit-btn" style="margin-top: 8px;">
             <span>Record Expense</span>
           </button>
@@ -1486,6 +1645,20 @@
       </div>
     </section>
 
+    <!-- ==========================================================
+         FLOATING ACTION BUTTONS — KANAN
+         ========================================================== -->
+    <div class="fab-layer">
+      <button type="button" class="fab-btn fab-expense" onclick="switchTab('tab-expenses')" aria-label="Tambah Expense">
+        <svg viewBox="0 0 24 24"><path d="M20 12H4"/></svg>
+        <span>Expense</span>
+      </button>
+      <button type="button" class="fab-btn fab-sale" onclick="switchTab('tab-sales')" aria-label="Tambah Sale">
+        <svg viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+        <span>Sale</span>
+      </button>
+    </div>
+
     <nav class="bottom-tab-bar">
       <button class="tab-btn active" id="tab-dashboard" onclick="switchTab('tab-dashboard')">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
@@ -1525,10 +1698,11 @@
       </div>
 
       <div id="modal-receipt-section" style="margin-top: 14px; display: none;">
-        <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">ATTACHED RECEIPT</div>
+        <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">ATTACHED RECEIPT (BASE64)</div>
         <div style="text-align: center; background: rgba(0,0,0,0.25); border-radius: 14px; padding: 8px; border: 1px solid var(--border-glass);">
           <img id="modal-receipt-img" src="" alt="Receipt" style="max-height: 260px; max-width: 100%; border-radius: 10px; object-fit: contain;">
         </div>
+        <div id="modal-receipt-meta" class="receipt-meta"></div>
       </div>
 
       <div style="margin-top: 20px; display: flex; gap: 10px;">
@@ -1671,6 +1845,12 @@
       return String(str)
         .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
+
+    function base64SizeKB(base64Str) {
+      if (!base64Str) return 0;
+      const pure = base64Str.split(',')[1] || base64Str;
+      return Math.round((pure.length * 3) / 4 / 1024);
     }
 
     /* Count-up number animation */
@@ -1881,48 +2061,103 @@
     }
 
     /* ==========================================================
-       RECEIPT
+       RECEIPT — BASE64 UPLOAD
        ========================================================== */
-    function triggerReceiptCapture(type) {
-      const input = document.getElementById(`${type}-receipt-input`);
-      if (input) input.click();
+    function triggerReceiptCapture(type, source = 'camera') {
+      const inputId = (source === 'gallery')
+        ? `${type}-receipt-gallery-input`
+        : `${type}-receipt-camera-input`;
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      input.value = '';       // benarkan pilih fail yang sama semula
+      input.click();
     }
 
     function handleReceiptFile(event, type) {
-      const file = event.target.files[0];
+      const file = event.target.files && event.target.files[0];
       if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        showToast('Sila pilih fail gambar sahaja', '⚠️');
+        return;
+      }
+      if (file.size > 12 * 1024 * 1024) {
+        showToast('Gambar terlalu besar (maks 12MB)', '⚠️');
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = function (e) {
         const img = new Image();
         img.onload = function () {
+          // ---- Compress → Base64 (JPEG) ----
           const canvas = document.createElement('canvas');
           const maxDim = 900;
           let width = img.width, height = img.height;
-          if (width > height && width > maxDim) { height = Math.round((height * maxDim) / width); width = maxDim; }
-          else if (height > maxDim) { width = Math.round((width * maxDim) / height); height = maxDim; }
-          canvas.width = width; canvas.height = height;
-          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+
+          if (width > height && width > maxDim) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else if (height > maxDim) {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, width, height);
+          ctx.drawImage(img, 0, 0, width, height);
+
           const base64Data = canvas.toDataURL('image/jpeg', 0.65);
+
+          // ---- Simpan dalam state ----
           STATE.pendingReceiptExpense = base64Data;
+
+          // ---- Update UI ----
+          const previewWrap = document.getElementById('expense-receipt-preview-wrap');
           const preview = document.getElementById('expense-receipt-preview');
+          const emptyState = document.getElementById('expense-receipt-empty');
+          const box = document.getElementById('expense-receipt-box');
+          const meta = document.getElementById('expense-receipt-meta');
+
           preview.src = base64Data;
-          preview.style.display = 'block';
-          document.getElementById('expense-receipt-reset').style.display = 'block';
-          showToast('Receipt captured & compressed!', '📷');
+          previewWrap.style.display = 'block';
+          emptyState.style.display = 'none';
+          box.classList.add('has-image');
+
+          const kb = base64SizeKB(base64Data);
+          meta.textContent = `Base64 • JPEG ${width}×${height}px • ${kb} KB`;
+
+          showToast('Resit disimpan sebagai Base64 📷', '✅');
         };
+        img.onerror = function () { showToast('Gagal membaca gambar', '⚠️'); };
         img.src = e.target.result;
       };
+      reader.onerror = function () { showToast('Gagal membaca fail', '⚠️'); };
       reader.readAsDataURL(file);
     }
 
     function clearReceipt(type) {
       STATE.pendingReceiptExpense = null;
-      const input = document.getElementById('expense-receipt-input');
-      if (input) input.value = '';
+
+      ['camera', 'gallery'].forEach(src => {
+        const inp = document.getElementById(`${type}-receipt-${src}-input`);
+        if (inp) inp.value = '';
+      });
+
       const preview = document.getElementById('expense-receipt-preview');
-      preview.src = ''; preview.style.display = 'none';
-      document.getElementById('expense-receipt-reset').style.display = 'none';
-      showToast('Receipt removed', '🗑️');
+      const previewWrap = document.getElementById('expense-receipt-preview-wrap');
+      const emptyState = document.getElementById('expense-receipt-empty');
+      const box = document.getElementById('expense-receipt-box');
+
+      if (preview) preview.src = '';
+      if (previewWrap) previewWrap.style.display = 'none';
+      if (emptyState) emptyState.style.display = 'block';
+      if (box) box.classList.remove('has-image');
+
+      showToast('Resit dibuang', '🗑️');
     }
 
     /* ==========================================================
@@ -1980,7 +2215,10 @@
         date: dateVal ? new Date(dateVal).toISOString() : new Date().toISOString(),
         details: detailsVal,
         category: categoryVal,
-        receipt: STATE.pendingReceiptExpense || null,
+        receipt: STATE.pendingReceiptExpense || null,   // <<< BASE64
+        receiptMeta: STATE.pendingReceiptExpense
+          ? { sizeKB: base64SizeKB(STATE.pendingReceiptExpense), mime: 'image/jpeg' }
+          : null,
         createdAt: Date.now()
       };
 
@@ -2303,12 +2541,16 @@
 
       const receiptSec = document.getElementById('modal-receipt-section');
       const receiptImg = document.getElementById('modal-receipt-img');
+      const receiptMeta = document.getElementById('modal-receipt-meta');
+
       if (tx.receipt) {
         receiptImg.src = tx.receipt;
         receiptSec.style.display = 'block';
+        receiptMeta.textContent = `Base64 • ${base64SizeKB(tx.receipt)} KB`;
       } else {
         receiptSec.style.display = 'none';
         receiptImg.src = '';
+        receiptMeta.textContent = '';
       }
       document.getElementById('detail-modal').classList.add('active');
     }
@@ -2494,4 +2736,3 @@
   </script>
 </body>
 </html>
-`
