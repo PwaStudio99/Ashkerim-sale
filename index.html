@@ -7,9 +7,9 @@
   <meta name="theme-color" content="#0a0a1a">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="AISHKERIM">
-  <meta name="description" content="AISHKERIM - Premium Mobile Sales & Expense Bookkeeping PWA">
-  <title>AISHKERIM | Smart Financial Hub</title>
+  <meta name="apple-mobile-web-app-title" content="ASHKERIM">
+  <meta name="description" content="ASHKERIM - Premium Mobile Sales & Expense Bookkeeping PWA">
+  <title>ASHKERIM | Smart Financial Hub</title>
 
   <script>
     (function () {
@@ -42,6 +42,7 @@
       --grad-net: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 45%, #06b6d4 100%);
       --grad-purple-red: linear-gradient(135deg, #8b5cf6 0%, #ef4444 100%);
       --grad-red-blue: linear-gradient(135deg, #ef4444 0%, #3b82f6 100%);
+      --grad-success: linear-gradient(135deg, #10b981 0%, #22d3ee 100%);
 
       --bg-base: #08081a;
       --bg-surface: rgba(24, 22, 55, 0.72);
@@ -61,12 +62,14 @@
       --accent-sales-subtle: rgba(34, 211, 238, 0.14);
       --accent-expense: #f87171;
       --accent-expense-subtle: rgba(248, 113, 113, 0.14);
+      --accent-success: #10b981;
       --bottom-bar-bg: rgba(12, 12, 32, 0.85);
       --brand-text-grad: linear-gradient(120deg, #ffffff 0%, #a78bfa 45%, #60a5fa 100%);
       --shadow-elevation: 0 10px 30px -8px rgba(139, 92, 246, 0.35), 0 4px 20px -4px rgba(0, 0, 0, 0.5);
       --shadow-glow-purple: 0 0 30px rgba(139, 92, 246, 0.35);
       --shadow-glow-red: 0 0 30px rgba(239, 68, 68, 0.30);
       --shadow-glow-blue: 0 0 30px rgba(59, 130, 246, 0.30);
+      --shadow-glow-green: 0 0 30px rgba(16, 185, 129, 0.30);
       --body-glow-1: rgba(139, 92, 246, 0.22);
       --body-glow-2: rgba(59, 130, 246, 0.18);
       --body-glow-3: rgba(239, 68, 68, 0.12);
@@ -284,7 +287,6 @@
     .screen-view.active > *:nth-child(5) { animation-delay: 0.22s; }
     .screen-view.active > *:nth-child(6) { animation-delay: 0.27s; }
     .screen-view.active > *:nth-child(7) { animation-delay: 0.32s; }
-    .screen-view.active > *:nth-child(8) { animation-delay: 0.37s; }
 
     @keyframes cardEnter {
       from { opacity: 0; transform: translateY(18px) scale(0.98); }
@@ -438,21 +440,76 @@
       font-variant-numeric: tabular-nums;
     }
 
+    /* ==========================================================
+       CHART CONTROLS & BARS (VIEW ALL & SELECT TARIKH)
+       ========================================================== */
+    .chart-controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-top: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .chart-pill-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 11px;
+      border-radius: 9999px;
+      font-size: 0.73rem;
+      font-weight: 700;
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.25s var(--ease-out);
+      font-family: inherit;
+    }
+    .chart-pill-btn:hover {
+      border-color: var(--primary);
+      color: var(--text-main);
+      transform: translateY(-1px);
+    }
+    .chart-pill-btn.active {
+      background: var(--grad-primary);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 4px 14px rgba(139, 92, 246, 0.4);
+    }
+    .chart-pill-btn svg { width: 13px; height: 13px; }
+
+    .chart-scroll-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 6px;
+    }
+    .chart-scroll-wrapper::-webkit-scrollbar { height: 4px; }
+    .chart-scroll-wrapper::-webkit-scrollbar-thumb {
+      background: rgba(139, 92, 246, 0.3);
+      border-radius: 4px;
+    }
+
     .daily-chart-bars {
       display: flex;
-      gap: 6px;
+      gap: 8px;
       align-items: stretch;
-      height: 172px;
-      padding: 22px 2px 0 2px;
+      height: 176px;
+      padding: 24px 6px 0 6px;
       border-bottom: 1px solid var(--border-subtle);
       position: relative;
+      min-width: 100%;
     }
 
     .daily-bar-col {
       flex: 1;
+      min-width: 44px;
       display: flex;
       flex-direction: column;
-      min-width: 0;
       gap: 2px;
     }
 
@@ -467,27 +524,28 @@
 
     .daily-bar {
       width: 100%;
-      max-width: 36px;
+      max-width: 34px;
       background: var(--grad-sales);
       background-size: 100% 200%;
       border-radius: 8px 8px 4px 4px;
-      min-height: 3px;
+      min-height: 4px;
       position: relative;
-      animation: barGrow 1s var(--ease-out) backwards;
+      animation: barGrow 0.8s var(--ease-out) backwards;
       transition: filter 0.3s ease, transform 0.3s var(--ease-bounce);
       box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+      cursor: pointer;
     }
     .daily-bar:hover {
-      filter: brightness(1.15);
-      transform: translateY(-3px);
-      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.55);
+      filter: brightness(1.2);
+      transform: translateY(-3px) scaleX(1.05);
+      box-shadow: 0 6px 18px rgba(59, 130, 246, 0.6);
     }
 
     .daily-bar.is-today {
       background: var(--grad-primary);
       background-size: 100% 200%;
       box-shadow: 0 4px 15px rgba(139, 92, 246, 0.55);
-      animation: barGrow 1s var(--ease-out) backwards, todayPulse 2.5s ease-in-out infinite 1s;
+      animation: barGrow 0.8s var(--ease-out) backwards, todayPulse 2.5s ease-in-out infinite 1s;
     }
 
     @keyframes barGrow {
@@ -501,7 +559,7 @@
 
     .daily-bar-value {
       position: absolute;
-      top: -17px;
+      top: -18px;
       left: 50%;
       transform: translateX(-50%);
       font-size: 0.6rem;
@@ -509,6 +567,7 @@
       color: var(--text-muted);
       white-space: nowrap;
       letter-spacing: -0.2px;
+      pointer-events: none;
     }
     .daily-bar.is-today .daily-bar-value { color: var(--primary); }
 
@@ -654,6 +713,9 @@
       box-shadow: 0 0 20px rgba(139, 92, 246, 0.25);
     }
 
+    /* ==========================================================
+       RECEIPT BOX & PREVIEW
+       ========================================================== */
     .receipt-box {
       border: 2px dashed var(--border-glass);
       border-radius: 16px;
@@ -661,7 +723,8 @@
       text-align: center;
       position: relative;
       background: var(--bg-receipt-box);
-      transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s var(--ease-bounce), box-shadow 0.3s ease;
+      transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s var(--ease-bounce),
+                  box-shadow 0.3s ease, opacity 0.35s ease, filter 0.35s ease;
     }
     .receipt-box:hover {
       border-color: var(--primary);
@@ -670,6 +733,19 @@
     .receipt-box.has-image {
       border-style: solid;
       border-color: rgba(139, 92, 246, 0.45);
+    }
+    .receipt-box.disabled {
+      opacity: 0.35;
+      pointer-events: none;
+      filter: grayscale(0.6);
+      transform: scale(0.99);
+    }
+
+    .receipt-preview-container {
+      position: relative;
+      display: inline-block;
+      max-width: 100%;
+      cursor: zoom-in;
     }
 
     .receipt-preview-img {
@@ -680,6 +756,25 @@
       border: 1px solid var(--border-glass);
       animation: cardEnter 0.5s var(--ease-out);
       background: rgba(0,0,0,0.15);
+      transition: transform 0.25s ease, filter 0.25s ease;
+    }
+    .receipt-preview-container:hover .receipt-preview-img {
+      transform: scale(1.02);
+      filter: brightness(1.05);
+    }
+
+    .receipt-tap-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--primary);
+      background: rgba(139, 92, 246, 0.15);
+      padding: 3px 8px;
+      border-radius: 9999px;
+      margin-top: 6px;
+      cursor: pointer;
     }
 
     .receipt-icon-circle {
@@ -746,6 +841,124 @@
       letter-spacing: 0.2px;
     }
 
+    /* ==========================================================
+       NO RECEIPT TOGGLE (Tick)
+       ========================================================== */
+    .no-receipt-toggle {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: 14px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      position: relative;
+      overflow: hidden;
+      transition:
+        border-color 0.3s ease,
+        background 0.3s ease,
+        box-shadow 0.3s ease,
+        transform 0.25s var(--ease-bounce);
+    }
+    .no-receipt-toggle::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, rgba(16, 185, 129, 0.14), rgba(34, 211, 238, 0.10));
+      transition: width 0.4s var(--ease-out);
+      z-index: 0;
+    }
+    .no-receipt-toggle:hover {
+      border-color: rgba(16, 185, 129, 0.45);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.18);
+    }
+    .no-receipt-toggle:active { transform: scale(0.985); }
+    .no-receipt-toggle.is-checked {
+      border-color: rgba(16, 185, 129, 0.55);
+      background: rgba(16, 185, 129, 0.08);
+      box-shadow: 0 8px 22px -6px rgba(16, 185, 129, 0.4);
+    }
+    .no-receipt-toggle.is-checked::before { width: 100%; }
+
+    .no-receipt-toggle input[type="checkbox"] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-box {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      border: 2px solid var(--border-glass);
+      background: var(--bg-input);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+      transition:
+        background 0.35s var(--ease-out),
+        border-color 0.35s ease,
+        box-shadow 0.35s ease,
+        transform 0.3s var(--ease-bounce);
+    }
+    .toggle-box svg {
+      width: 15px;
+      height: 15px;
+      stroke: #ffffff;
+      stroke-width: 3;
+      fill: none;
+      opacity: 0;
+      transform: scale(0.4) rotate(-30deg);
+      transition: opacity 0.25s ease, transform 0.35s var(--ease-bounce);
+    }
+    .no-receipt-toggle input:checked ~ .toggle-box {
+      background: var(--grad-success);
+      border-color: transparent;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.55), 0 0 0 4px rgba(16, 185, 129, 0.15);
+      transform: scale(1.05);
+    }
+    .no-receipt-toggle input:checked ~ .toggle-box svg {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+
+    .toggle-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      min-width: 0;
+    }
+    .toggle-text strong {
+      font-size: 0.85rem;
+      color: var(--text-main);
+      font-weight: 700;
+      letter-spacing: 0.1px;
+    }
+    .toggle-text small {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      font-weight: 500;
+      line-height: 1.3;
+    }
+    .no-receipt-toggle input:checked ~ .toggle-text strong { color: var(--accent-success); }
+
+    /* ==========================================================
+       FAB
+       ========================================================== */
     .fab-layer {
       position: fixed;
       left: 50%;
@@ -915,11 +1128,22 @@
       display: flex;
       gap: 6px;
       align-items: center;
+      flex-wrap: wrap;
     }
 
     .receipt-indicator-tag {
       background: rgba(139, 92, 246, 0.2);
       color: var(--purple-400);
+      font-size: 0.65rem;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .no-receipt-indicator-tag {
+      background: rgba(16, 185, 129, 0.18);
+      color: var(--accent-success);
       font-size: 0.65rem;
       padding: 1px 6px;
       border-radius: 4px;
@@ -1009,7 +1233,7 @@
     }
 
     /* ==========================================================
-       MODAL — SMOOTH & POLISHED ANIMATIONS
+       MODAL — SMOOTH & POLISHED
        ========================================================== */
     .modal-overlay {
       position: fixed;
@@ -1071,58 +1295,6 @@
       opacity: 1;
     }
 
-    /* Top edge shimmer highlight on the modal */
-    .modal-card::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent 0%, rgba(139, 92, 246, 0.65) 30%, rgba(59, 130, 246, 0.75) 50%, rgba(239, 68, 68, 0.65) 70%, transparent 100%);
-      background-size: 200% 100%;
-      opacity: 0;
-      pointer-events: none;
-      border-top-left-radius: 28px;
-      border-top-right-radius: 28px;
-      animation: modalTopShine 4s ease-in-out infinite;
-    }
-    .modal-overlay.active .modal-card::after { opacity: 1; }
-
-    @keyframes modalTopShine {
-      0%, 100% { background-position: 0% 0%; }
-      50% { background-position: 100% 0%; }
-    }
-
-    /* Staggered content entrance */
-    .modal-overlay.active .modal-card > * {
-      animation: modalContentIn 0.55s var(--ease-out) backwards;
-    }
-    .modal-overlay.active .modal-card > *:nth-child(1) { animation-delay: 0.08s; }
-    .modal-overlay.active .modal-card > *:nth-child(2) { animation-delay: 0.13s; }
-    .modal-overlay.active .modal-card > *:nth-child(3) { animation-delay: 0.18s; }
-    .modal-overlay.active .modal-card > *:nth-child(4) { animation-delay: 0.23s; }
-    .modal-overlay.active .modal-card > *:nth-child(5) { animation-delay: 0.28s; }
-    .modal-overlay.active .modal-card > *:nth-child(6) { animation-delay: 0.33s; }
-    .modal-overlay.active .modal-card > *:nth-child(7) { animation-delay: 0.38s; }
-    .modal-overlay.active .modal-card > *:nth-child(8) { animation-delay: 0.43s; }
-
-    @keyframes modalContentIn {
-      from { opacity: 0; transform: translateY(16px) scale(0.985); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    /* Form groups stagger inside modal */
-    .modal-overlay.active .modal-card form > .form-group {
-      animation: modalContentIn 0.5s var(--ease-out) backwards;
-    }
-    .modal-overlay.active .modal-card form > .form-group:nth-child(1) { animation-delay: 0.16s; }
-    .modal-overlay.active .modal-card form > .form-group:nth-child(2) { animation-delay: 0.21s; }
-    .modal-overlay.active .modal-card form > .form-group:nth-child(3) { animation-delay: 0.26s; }
-    .modal-overlay.active .modal-card form > .form-group:nth-child(4) { animation-delay: 0.31s; }
-    .modal-overlay.active .modal-card form > .form-group:nth-child(5) { animation-delay: 0.36s; }
-    .modal-overlay.active .modal-card form > .form-group:nth-child(6) { animation-delay: 0.41s; }
-
     .modal-handle {
       width: 42px;
       height: 4px;
@@ -1130,15 +1302,6 @@
       border-radius: 9999px;
       margin: -10px auto 16px auto;
       box-shadow: 0 0 12px rgba(139, 92, 246, 0.55);
-      transition: width 0.5s var(--ease-out), box-shadow 0.5s ease;
-    }
-    .modal-overlay.active .modal-handle {
-      animation: handleGrow 0.7s var(--ease-spring) 0.1s backwards;
-    }
-    @keyframes handleGrow {
-      from { width: 0; opacity: 0; }
-      60% { width: 52px; opacity: 1; }
-      to { width: 42px; opacity: 1; }
     }
 
     .modal-header-row {
@@ -1172,6 +1335,104 @@
       margin-bottom: 18px;
     }
 
+    /* ==========================================================
+       FULL IMAGE LIGHTBOX POPUP FOR RECEIPTS
+       ========================================================== */
+    #receipt-lightbox-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 250;
+      background: rgba(4, 4, 15, 0.94);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: calc(var(--safe-top) + 16px) 16px calc(var(--safe-bottom) + 16px) 16px;
+      opacity: 0;
+      transition: opacity 0.35s var(--ease-out);
+    }
+    #receipt-lightbox-modal.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .lightbox-header {
+      position: absolute;
+      top: calc(var(--safe-top) + 16px);
+      left: 16px;
+      right: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 260;
+    }
+
+    .lightbox-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #ffffff;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lightbox-close-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: 700;
+      transition: transform 0.25s var(--ease-bounce), background 0.2s ease;
+    }
+    .lightbox-close-btn:hover {
+      background: rgba(239, 68, 68, 0.8);
+      transform: scale(1.08);
+    }
+    .lightbox-close-btn:active { transform: scale(0.92); }
+
+    .lightbox-content-wrap {
+      max-width: 96vw;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: modalContentIn 0.4s var(--ease-spring);
+    }
+
+    .lightbox-img {
+      max-width: 100%;
+      max-height: 75vh;
+      border-radius: 16px;
+      object-fit: contain;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255,255,255,0.15);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .lightbox-footer-info {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .lightbox-meta {
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.75);
+      font-weight: 600;
+    }
+
     .toast-box {
       position: fixed;
       top: calc(var(--safe-top) + 20px);
@@ -1189,7 +1450,7 @@
       align-items: center;
       gap: 10px;
       box-shadow: 0 15px 40px rgba(139, 92, 246, 0.5);
-      z-index: 120;
+      z-index: 300;
       opacity: 0;
       pointer-events: none;
       transition: all 0.45s var(--ease-bounce);
@@ -1340,25 +1601,6 @@
 
     #print-report { display: none; }
 
-    .rpt-header { border-bottom: 3px solid #7c3aed; padding-bottom: 10px; margin-bottom: 18px; }
-    .rpt-brand { font-size: 22px; font-weight: 900; letter-spacing: 3px; color: #7c3aed; }
-    .rpt-tagline { font-size: 10px; color: #666; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; font-weight: 700; }
-    .rpt-title-block { margin-bottom: 18px; }
-    .rpt-h1 { font-size: 17px; font-weight: 800; color: #111; letter-spacing: 1px; }
-    .rpt-period { font-size: 13px; font-weight: 700; color: #333; margin-top: 4px; }
-    .rpt-generated { font-size: 10.5px; color: #666; margin-top: 3px; }
-    .rpt-stats { display: flex; gap: 10px; margin-bottom: 20px; }
-    .rpt-stat { flex: 1; border: 1px solid #ccc; border-radius: 8px; padding: 10px 12px; }
-    .rpt-stat-label { font-size: 9.5px; text-transform: uppercase; letter-spacing: 1px; color: #666; font-weight: 700; }
-    .rpt-stat-value { font-size: 16px; font-weight: 800; color: #111; margin-top: 4px; }
-    .rpt-h3 { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #222; margin: 18px 0 8px 0; }
-    .rpt-table { width: 100%; border-collapse: collapse; font-size: 11px; }
-    .rpt-table th { background: #f1f1f1; text-align: left; padding: 7px 8px; border: 1px solid #ccc; font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.5px; color: #333; }
-    .rpt-table td { padding: 7px 8px; border: 1px solid #ddd; color: #222; vertical-align: top; }
-    .rpt-table tfoot td { background: #f8f8f8; }
-    .rpt-num { text-align: right; }
-    .rpt-footer { margin-top: 26px; border-top: 1px solid #ccc; padding-top: 8px; font-size: 9.5px; color: #777; text-align: center; }
-
     @media print {
       @page { size: A4; margin: 14mm; }
       html, body {
@@ -1368,17 +1610,8 @@
         min-height: 0 !important;
         overflow: visible !important;
       }
-      #app-container, #auth-screen, .modal-overlay, #toast, #splash, .fab-layer { display: none !important; }
+      #app-container, #auth-screen, .modal-overlay, #toast, #splash, .fab-layer, #receipt-lightbox-modal { display: none !important; }
       #print-report { display: block !important; color: #000; }
-    }
-
-    /* Reduce motion */
-    @media (prefers-reduced-motion: reduce) {
-      .modal-overlay, .modal-card, .modal-overlay.active .modal-card > *,
-      .modal-overlay.active .modal-card form > .form-group, .modal-overlay.active .modal-handle {
-        transition-duration: 0.01ms !important;
-        animation-duration: 0.01ms !important;
-      }
     }
   </style>
 </head>
@@ -1392,7 +1625,7 @@
   <div id="auth-screen" style="display: none;">
     <div class="auth-card">
       <div class="auth-logo-badge">⚡</div>
-      <h2 style="text-align: center; font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; background: var(--brand-text-grad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">AISHKERIM</h2>
+      <h2 style="text-align: center; font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; background: var(--brand-text-grad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">ASHKERIM</h2>
       <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Mobile Financial &amp; Bookkeeping Hub</p>
 
       <div class="auth-mode-toggle">
@@ -1433,7 +1666,7 @@
   <div id="app-container" style="visibility: hidden;">
     <header class="app-header">
       <div style="display: flex; align-items: center;">
-        <span class="brand-title">AISHKERIM</span>
+        <span class="brand-title">ASHKERIM</span>
         <span class="brand-badge">PWA</span>
       </div>
       <div class="header-actions">
@@ -1488,12 +1721,32 @@
         </div>
       </div>
 
+      <!-- INTERACTIVE SALES CHART CARD -->
       <div class="glass-card">
         <div class="card-title">
-          <span>Sales Trend — Last 7 Days</span>
+          <span id="chart-title-text">Sales Trend</span>
           <span id="daily-chart-total" style="font-size: 0.75rem; color: var(--accent-sales); font-weight: 800;">RM 0.00</span>
         </div>
-        <div id="daily-chart-container" style="margin-top: 6px;"></div>
+
+        <!-- Controls: View All & Select Tarikh -->
+        <div class="chart-controls-row">
+          <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+            <button type="button" class="chart-pill-btn active" id="btn-chart-7d" onclick="setChartMode('7d')">7 Hari</button>
+            <button type="button" class="chart-pill-btn" id="btn-chart-30d" onclick="setChartMode('30d')">30 Hari</button>
+            <button type="button" class="chart-pill-btn" id="btn-chart-all" onclick="setChartMode('all')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+              <span>View All</span>
+            </button>
+          </div>
+          <button type="button" class="chart-pill-btn" id="btn-chart-custom" onclick="openDateFilterModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span id="custom-date-label">Pilih Tarikh</span>
+          </button>
+        </div>
+
+        <div class="chart-scroll-wrapper">
+          <div id="daily-chart-container"></div>
+        </div>
       </div>
 
       <div class="glass-card">
@@ -1606,6 +1859,21 @@
             <input type="text" id="expense-details" class="form-input" placeholder="e.g., Fabric Supplier payment #409" required>
           </div>
 
+          <!-- No Receipt Toggle -->
+          <div class="form-group">
+            <label class="no-receipt-toggle" id="expense-no-receipt-toggle-label">
+              <input type="checkbox" id="expense-no-receipt"
+                     onchange="toggleNoReceipt('expense', this.checked)">
+              <span class="toggle-box">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span class="toggle-text">
+                <strong>Tiada Resit</strong>
+                <small>Simpan jumlah sahaja tanpa gambar</small>
+              </span>
+            </label>
+          </div>
+
           <div class="form-group">
             <label class="form-label">Vendor Bill / Receipt — Base64 Image</label>
             <div class="receipt-box" id="expense-receipt-box">
@@ -1629,7 +1897,12 @@
               </div>
 
               <div id="expense-receipt-preview-wrap" style="display: none;">
-                <img id="expense-receipt-preview" class="receipt-preview-img" alt="Expense receipt preview">
+                <div class="receipt-preview-container" onclick="openLightbox(STATE.pendingReceipts['expense'], 'Pratonton Resit')">
+                  <img id="expense-receipt-preview" class="receipt-preview-img" alt="Expense receipt preview">
+                </div>
+                <div class="receipt-tap-hint" onclick="openLightbox(STATE.pendingReceipts['expense'], 'Pratonton Resit')">
+                  🔍 Tekan untuk Zoom Penuh
+                </div>
                 <div id="expense-receipt-meta" class="receipt-meta">Base64 • 0 KB</div>
                 <div class="receipt-actions">
                   <button type="button" class="receipt-btn" onclick="triggerReceiptCapture('expense','camera')">
@@ -1760,6 +2033,34 @@
     </nav>
   </div>
 
+  <!-- DATE FILTER MODAL FOR CHART -->
+  <div id="chart-date-modal" class="modal-overlay" onclick="closeDateFilterModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-handle"></div>
+      <div class="modal-header-row">
+        <h3 class="modal-title-sales">Pilih Julat Tarikh Graf</h3>
+        <button onclick="closeDateFilterModal()" class="avatar-btn" style="width: 30px; height: 30px; font-size: 0.8rem;">✕</button>
+      </div>
+      <p class="modal-subtitle">Tapis paparan graf jualan mengikut tarikh khusus.</p>
+
+      <form onsubmit="applyCustomDateFilter(event)">
+        <div class="form-group">
+          <label class="form-label" for="filter-start-date">Dari Tarikh</label>
+          <input type="date" id="filter-start-date" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="filter-end-date">Hingga Tarikh</label>
+          <input type="date" id="filter-end-date" class="form-input" required>
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 14px;">
+          <button type="button" class="btn btn-secondary" onclick="closeDateFilterModal()">Batal</button>
+          <button type="submit" class="btn btn-sales">Gunakan Tarikh</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- FAB SALE MODAL -->
   <div id="fab-sale-modal" class="modal-overlay" onclick="closeFabModal('fab-sale-modal')">
     <div class="modal-card" onclick="event.stopPropagation()">
       <div class="modal-handle"></div>
@@ -1798,6 +2099,7 @@
     </div>
   </div>
 
+  <!-- FAB EXPENSE MODAL -->
   <div id="fab-expense-modal" class="modal-overlay" onclick="closeFabModal('fab-expense-modal')">
     <div class="modal-card" onclick="event.stopPropagation()">
       <div class="modal-handle"></div>
@@ -1834,6 +2136,20 @@
         </div>
 
         <div class="form-group">
+          <label class="no-receipt-toggle" id="fab-expense-no-receipt-toggle-label">
+            <input type="checkbox" id="fab-expense-no-receipt"
+                   onchange="toggleNoReceipt('fab-expense', this.checked)">
+            <span class="toggle-box">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span class="toggle-text">
+              <strong>Tiada Resit</strong>
+              <small>Simpan jumlah sahaja tanpa gambar</small>
+            </span>
+          </label>
+        </div>
+
+        <div class="form-group">
           <label class="form-label">Vendor Bill / Receipt — Base64 Image</label>
           <div class="receipt-box" id="fab-expense-receipt-box">
             <div id="fab-expense-receipt-empty">
@@ -1856,7 +2172,12 @@
             </div>
 
             <div id="fab-expense-receipt-preview-wrap" style="display: none;">
-              <img id="fab-expense-receipt-preview" class="receipt-preview-img" alt="Expense receipt preview">
+              <div class="receipt-preview-container" onclick="openLightbox(STATE.pendingReceipts['fab-expense'], 'Pratonton Resit')">
+                <img id="fab-expense-receipt-preview" class="receipt-preview-img" alt="Expense receipt preview">
+              </div>
+              <div class="receipt-tap-hint" onclick="openLightbox(STATE.pendingReceipts['fab-expense'], 'Pratonton Resit')">
+                🔍 Tekan untuk Zoom Penuh
+              </div>
               <div id="fab-expense-receipt-meta" class="receipt-meta">Base64 • 0 KB</div>
               <div class="receipt-actions">
                 <button type="button" class="receipt-btn" onclick="triggerReceiptCapture('fab-expense','camera')">
@@ -1882,6 +2203,7 @@
     </div>
   </div>
 
+  <!-- DETAIL MODAL -->
   <div id="detail-modal" class="modal-overlay" onclick="closeDetailModal(event)">
     <div class="modal-card" onclick="event.stopPropagation()">
       <div class="modal-handle"></div>
@@ -1896,10 +2218,22 @@
         <div id="modal-date" style="font-size: 0.78rem; color: var(--text-dim); margin-top: 2px;">Date</div>
       </div>
 
+      <div id="modal-no-receipt-info" style="display: none; margin-top: 14px;">
+        <div style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 14px; padding: 12px 14px; display: flex; align-items: center; gap: 10px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span style="font-size: 0.8rem; color: var(--accent-success); font-weight: 700;">Tiada resit dilampirkan — jumlah sahaja</span>
+        </div>
+      </div>
+
+      <!-- RECEIPT SECTION WITH FULLSCREEN POPUP TRIGGER -->
       <div id="modal-receipt-section" style="margin-top: 14px; display: none;">
-        <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">ATTACHED RECEIPT (BASE64)</div>
-        <div style="text-align: center; background: rgba(0,0,0,0.25); border-radius: 14px; padding: 8px; border: 1px solid var(--border-glass);">
-          <img id="modal-receipt-img" src="" alt="Receipt" style="max-height: 260px; max-width: 100%; border-radius: 10px; object-fit: contain;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">ATTACHED RECEIPT</span>
+          <span style="font-size: 0.7rem; color: var(--primary); font-weight: 700;">Ketik untuk besarkan 🔍</span>
+        </div>
+        <div style="text-align: center; background: rgba(0,0,0,0.25); border-radius: 14px; padding: 10px; border: 1px solid var(--border-glass); cursor: zoom-in;" onclick="triggerSelectedTxLightbox()">
+          <img id="modal-receipt-img" src="" alt="Receipt" style="max-height: 240px; max-width: 100%; border-radius: 10px; object-fit: contain; transition: transform 0.25s ease;">
+          <div style="margin-top: 6px; font-size: 0.72rem; color: var(--text-dim); font-weight: 600;">Sentuh gambar untuk mod skrin penuh</div>
         </div>
         <div id="modal-receipt-meta" class="receipt-meta"></div>
       </div>
@@ -1911,6 +2245,29 @@
     </div>
   </div>
 
+  <!-- FULLSCREEN RECEIPT LIGHTBOX POPUP -->
+  <div id="receipt-lightbox-modal" onclick="closeLightbox()">
+    <div class="lightbox-header" onclick="event.stopPropagation()">
+      <div class="lightbox-title">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <span id="lightbox-label">Full Receipt Image</span>
+      </div>
+      <button type="button" class="lightbox-close-btn" onclick="closeLightbox()" title="Tutup">✕</button>
+    </div>
+
+    <div class="lightbox-content-wrap" onclick="event.stopPropagation()">
+      <img id="lightbox-img" class="lightbox-img" src="" alt="Full Receipt">
+      <div class="lightbox-footer-info">
+        <span id="lightbox-size" class="lightbox-meta"></span>
+        <button type="button" class="chart-pill-btn" onclick="downloadLightboxImage()" style="color:#fff; background: rgba(255,255,255,0.15);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          <span>Muat Turun</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIRM MODAL -->
   <div id="confirm-modal" class="modal-overlay" onclick="closeConfirmModal()">
     <div class="modal-card" onclick="event.stopPropagation()" style="text-align: center;">
       <div class="modal-handle"></div>
@@ -1924,6 +2281,7 @@
     </div>
   </div>
 
+  <!-- LOGOUT MODAL -->
   <div id="logout-modal" class="modal-overlay" onclick="closeLogoutModal()">
     <div class="modal-card" onclick="event.stopPropagation()" style="text-align: center;">
       <div class="modal-handle"></div>
@@ -1979,9 +2337,14 @@
       currentFilter: 'all',
       selectedTxId: null,
       pendingReceipts: { expense: null, 'fab-expense': null },
+      noReceiptFlags: { expense: false, 'fab-expense': false },
       transactions: [],
       unsubscribeTx: null,
-      theme: (document.documentElement.getAttribute('data-theme') || 'dark')
+      theme: (document.documentElement.getAttribute('data-theme') || 'dark'),
+      // Chart filtering state
+      chartMode: '7d', // '7d', '30d', 'all', 'custom'
+      customDateRange: { start: null, end: null },
+      activeLightboxImage: null
     };
 
     function applyTheme(theme) {
@@ -2060,7 +2423,97 @@
       el.style.animation = 'cardEnter 0.35s var(--ease-out)';
     }
 
-    /* FAB MODAL — with polished open/close animation */
+    /* ==========================================================
+       FULL IMAGE LIGHTBOX POPUP LOGIC
+       ========================================================== */
+    function openLightbox(base64Data, label = 'Full Receipt Image') {
+      if (!base64Data) {
+        showToast('Tiada gambar resit untuk dipaparkan', '⚠️');
+        return;
+      }
+      STATE.activeLightboxImage = base64Data;
+      const modal = document.getElementById('receipt-lightbox-modal');
+      const img = document.getElementById('lightbox-img');
+      const title = document.getElementById('lightbox-label');
+      const sizeEl = document.getElementById('lightbox-size');
+
+      img.src = base64Data;
+      title.textContent = label;
+      sizeEl.textContent = `Resolusi Asal • ${base64SizeKB(base64Data)} KB`;
+
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      if (window.navigator.vibrate) window.navigator.vibrate(15);
+    }
+
+    function closeLightbox() {
+      const modal = document.getElementById('receipt-lightbox-modal');
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+      setTimeout(() => {
+        const img = document.getElementById('lightbox-img');
+        if (img) img.src = '';
+        STATE.activeLightboxImage = null;
+      }, 300);
+    }
+
+    function downloadLightboxImage() {
+      if (!STATE.activeLightboxImage) return;
+      const a = document.createElement('a');
+      a.href = STATE.activeLightboxImage;
+      a.download = `Resit-Aishkerim-${Date.now()}.jpg`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      showToast('Gambar resit sedang dimuat turun...', '💾');
+    }
+
+    function triggerSelectedTxLightbox() {
+      const tx = STATE.transactions.find(t => t.id === STATE.selectedTxId);
+      if (tx && tx.receipt) {
+        openLightbox(tx.receipt, `Resit: ${tx.details || 'Transaksi'}`);
+      }
+    }
+
+    /* ==========================================================
+       NO RECEIPT TOGGLE LOGIC
+       ========================================================== */
+    function toggleNoReceipt(prefix, isChecked) {
+      STATE.noReceiptFlags[prefix] = isChecked;
+
+      const label = document.getElementById(`${prefix}-no-receipt-toggle-label`);
+      const box = document.getElementById(`${prefix}-receipt-box`);
+      const checkbox = document.getElementById(`${prefix}-no-receipt`);
+
+      if (checkbox) checkbox.checked = isChecked;
+
+      if (isChecked) {
+        if (label) label.classList.add('is-checked');
+        if (box) box.classList.add('disabled');
+
+        if (STATE.pendingReceipts[prefix]) {
+          STATE.pendingReceipts[prefix] = null;
+          const preview = document.getElementById(`${prefix}-receipt-preview`);
+          const previewWrap = document.getElementById(`${prefix}-receipt-preview-wrap`);
+          const emptyState = document.getElementById(`${prefix}-receipt-empty`);
+          if (preview) preview.src = '';
+          if (previewWrap) previewWrap.style.display = 'none';
+          if (emptyState) emptyState.style.display = 'block';
+          if (box) box.classList.remove('has-image');
+          const meta = document.getElementById(`${prefix}-receipt-meta`);
+          if (meta) meta.textContent = '';
+        }
+        showToast('Mod tanpa resit diaktifkan', '✅');
+      } else {
+        if (label) label.classList.remove('is-checked');
+        if (box) box.classList.remove('disabled');
+        showToast('Resit diperlukan semula', '📷');
+      }
+    }
+
+    /* ==========================================================
+       FAB MODAL
+       ========================================================== */
     function openFabModal(id) {
       if (window.navigator.vibrate) window.navigator.vibrate(10);
       const modal = document.getElementById(id);
@@ -2076,7 +2529,6 @@
       }
 
       modal.classList.add('active');
-      // Prevent body scroll while modal is open
       document.body.style.overflow = 'hidden';
     }
 
@@ -2086,7 +2538,6 @@
       modal.classList.remove('active');
       document.body.style.overflow = '';
 
-      // Reset form after close animation completes
       setTimeout(() => {
         if (id === 'fab-sale-modal') {
           const form = document.getElementById('fab-sale-form');
@@ -2098,6 +2549,7 @@
           const form = document.getElementById('fab-expense-form');
           if (form) form.reset();
           clearReceipt('fab-expense');
+          toggleNoReceipt('fab-expense', false);
           const dateEl = document.getElementById('fab-expense-date');
           if (dateEl) dateEl.value = formatDateForInput();
         }
@@ -2301,6 +2753,10 @@
     }
 
     function triggerReceiptCapture(type, source = 'camera') {
+      if (STATE.noReceiptFlags[type]) {
+        showToast('Nyahaktifkan mod "Tiada Resit" dahulu', '⚠️');
+        return;
+      }
       const inputId = (source === 'gallery')
         ? `${type}-receipt-gallery-input`
         : `${type}-receipt-camera-input`;
@@ -2328,7 +2784,7 @@
         const img = new Image();
         img.onload = function () {
           const canvas = document.createElement('canvas');
-          const maxDim = 900;
+          const maxDim = 1200;
           let width = img.width, height = img.height;
 
           if (width > height && width > maxDim) {
@@ -2346,7 +2802,7 @@
           ctx.fillRect(0, 0, width, height);
           ctx.drawImage(img, 0, 0, width, height);
 
-          const base64Data = canvas.toDataURL('image/jpeg', 0.65);
+          const base64Data = canvas.toDataURL('image/jpeg', 0.72);
           STATE.pendingReceipts[type] = base64Data;
 
           const previewWrap = document.getElementById(`${type}-receipt-preview-wrap`);
@@ -2363,7 +2819,7 @@
           const kb = base64SizeKB(base64Data);
           if (meta) meta.textContent = `Base64 • JPEG ${width}×${height}px • ${kb} KB`;
 
-          showToast('Resit disimpan sebagai Base64 📷', '✅');
+          showToast('Resit disimpan! Ketik gambar untuk Zoom 🔍', '📷');
         };
         img.onerror = function () { showToast('Gagal membaca gambar', '⚠️'); };
         img.src = e.target.result;
@@ -2454,11 +2910,13 @@
       const categoryEl = document.getElementById(`${prefix}-category`);
       const btn = document.getElementById(`${prefix}-submit-btn`);
       const form = document.getElementById(`${prefix}-form`);
+      const noReceiptEl = document.getElementById(`${prefix}-no-receipt`);
 
       const amountVal = parseFloat(amountEl.value);
       const dateVal = dateEl.value;
       const detailsVal = detailsEl.value.trim();
       const categoryVal = categoryEl.value;
+      const hasNoReceipt = !!(noReceiptEl && noReceiptEl.checked);
 
       if (isNaN(amountVal) || amountVal <= 0) {
         showToast('Please enter a valid expense amount', '⚠️');
@@ -2471,7 +2929,8 @@
 
       if (btn) btn.disabled = true;
 
-      const pendingReceipt = STATE.pendingReceipts[prefix] || null;
+      const pendingReceipt = hasNoReceipt ? null : (STATE.pendingReceipts[prefix] || null);
+
       const txId = 'tx_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
       const txData = {
         type: 'expense',
@@ -2483,6 +2942,7 @@
         receiptMeta: pendingReceipt
           ? { sizeKB: base64SizeKB(pendingReceipt), mime: 'image/jpeg' }
           : null,
+        noReceipt: hasNoReceipt,
         createdAt: Date.now()
       };
 
@@ -2490,8 +2950,14 @@
         await persistTransaction(txId, txData);
         if (form) form.reset();
         clearReceipt(prefix);
+        toggleNoReceipt(prefix, false);
         dateEl.value = formatDateForInput();
-        showToast(`Expense of ${formatCurrency(amountVal)} logged!`, '📉');
+
+        if (hasNoReceipt) {
+          showToast(`Expense ${formatCurrency(amountVal)} disimpan (tiada resit)`, '✅');
+        } else {
+          showToast(`Expense of ${formatCurrency(amountVal)} logged!`, '📉');
+        }
 
         if (prefix === 'fab-expense') {
           closeFabModal('fab-expense-modal');
@@ -2541,33 +3007,168 @@
       return { todaySales, todaySalesCount, todayExpense, todayExpenseCount, monthSales, monthExpense, monthNet, margin };
     }
 
+    /* ==========================================================
+       CHART RENDERING: VIEW ALL & DATE FILTERING
+       ========================================================== */
+    function setChartMode(mode) {
+      STATE.chartMode = mode;
+
+      document.getElementById('btn-chart-7d').classList.toggle('active', mode === '7d');
+      document.getElementById('btn-chart-30d').classList.toggle('active', mode === '30d');
+      document.getElementById('btn-chart-all').classList.toggle('active', mode === 'all');
+      document.getElementById('btn-chart-custom').classList.toggle('active', mode === 'custom');
+
+      const titleEl = document.getElementById('chart-title-text');
+      if (mode === '7d') titleEl.textContent = 'Sales Trend (7 Hari)';
+      else if (mode === '30d') titleEl.textContent = 'Sales Trend (30 Hari)';
+      else if (mode === 'all') titleEl.textContent = 'Sales Trend (View All)';
+      else if (mode === 'custom') titleEl.textContent = 'Sales Trend (Julat Pilihan)';
+
+      renderDailySalesChart();
+    }
+
+    function openDateFilterModal() {
+      const today = formatDateForInput();
+      const modal = document.getElementById('chart-date-modal');
+      const startInp = document.getElementById('filter-start-date');
+      const endInp = document.getElementById('filter-end-date');
+
+      if (!startInp.value) {
+        const d = new Date();
+        d.setDate(d.getDate() - 14);
+        startInp.value = formatDateForInput(d);
+      }
+      if (!endInp.value) endInp.value = today;
+
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDateFilterModal() {
+      document.getElementById('chart-date-modal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function applyCustomDateFilter(e) {
+      e.preventDefault();
+      const startVal = document.getElementById('filter-start-date').value;
+      const endVal = document.getElementById('filter-end-date').value;
+
+      if (!startVal || !endVal) {
+        showToast('Sila pilih kedua-dua tarikh', '⚠️');
+        return;
+      }
+      if (new Date(startVal) > new Date(endVal)) {
+        showToast('Tarikh mula tidak boleh melebihi tarikh akhir', '⚠️');
+        return;
+      }
+
+      STATE.customDateRange = { start: startVal, end: endVal };
+      document.getElementById('custom-date-label').textContent = `${startVal.slice(5)} ~ ${endVal.slice(5)}`;
+      closeDateFilterModal();
+      setChartMode('custom');
+      showToast('Julat tarikh berjaya ditapis', '📅');
+    }
+
     function renderDailySalesChart() {
       const container = document.getElementById('daily-chart-container');
       if (!container) return;
 
-      const now = new Date();
-      now.setHours(0, 0, 0, 0);
+      const salesList = STATE.transactions.filter(t => t.type === 'sale');
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
       const days = [];
-      for (let i = 6; i >= 0; i--) {
-        const dayStart = new Date(now);
-        dayStart.setDate(dayStart.getDate() - i);
-        const dayEnd = new Date(dayStart);
-        dayEnd.setDate(dayEnd.getDate() + 1);
 
-        const total = STATE.transactions
-          .filter(t => t.type === 'sale')
-          .filter(t => {
-            const td = new Date(t.date);
-            return td >= dayStart && td < dayEnd;
-          })
-          .reduce((sum, t) => sum + t.amount, 0);
+      if (STATE.chartMode === '7d' || STATE.chartMode === '30d') {
+        const dayCount = STATE.chartMode === '7d' ? 7 : 30;
+        for (let i = dayCount - 1; i >= 0; i--) {
+          const dayStart = new Date(today);
+          dayStart.setDate(dayStart.getDate() - i);
+          const dayEnd = new Date(dayStart);
+          dayEnd.setDate(dayEnd.getDate() + 1);
 
-        days.push({
-          dayName: dayStart.toLocaleDateString('en-MY', { weekday: 'short' }),
-          dayNum: dayStart.getDate(),
-          total,
-          isToday: i === 0
+          const total = salesList
+            .filter(t => {
+              const td = new Date(t.date);
+              return td >= dayStart && td < dayEnd;
+            })
+            .reduce((sum, t) => sum + t.amount, 0);
+
+          days.push({
+            dateObj: dayStart,
+            dayName: dayStart.toLocaleDateString('en-MY', { weekday: 'short' }),
+            dayNum: dayStart.getDate(),
+            fullDate: dayStart.toLocaleDateString('en-MY', { day: 'numeric', month: 'short' }),
+            total,
+            isToday: i === 0
+          });
+        }
+      } else if (STATE.chartMode === 'custom' && STATE.customDateRange.start && STATE.customDateRange.end) {
+        const [sy, sm, sd] = STATE.customDateRange.start.split('-').map(Number);
+        const [ey, em, ed] = STATE.customDateRange.end.split('-').map(Number);
+
+        const cur = new Date(sy, sm - 1, sd, 0, 0, 0);
+        const end = new Date(ey, em - 1, ed, 0, 0, 0);
+
+        while (cur <= end) {
+          const dayStart = new Date(cur);
+          const dayEnd = new Date(cur);
+          dayEnd.setDate(dayEnd.getDate() + 1);
+
+          const total = salesList
+            .filter(t => {
+              const td = new Date(t.date);
+              return td >= dayStart && td < dayEnd;
+            })
+            .reduce((sum, t) => sum + t.amount, 0);
+
+          const isCurrentToday = dayStart.getTime() === today.getTime();
+          days.push({
+            dateObj: dayStart,
+            dayName: dayStart.toLocaleDateString('en-MY', { weekday: 'short' }),
+            dayNum: dayStart.getDate(),
+            fullDate: dayStart.toLocaleDateString('en-MY', { day: 'numeric', month: 'short' }),
+            total,
+            isToday: isCurrentToday
+          });
+
+          cur.setDate(cur.getDate() + 1);
+        }
+      } else if (STATE.chartMode === 'all') {
+        // Group all recorded sales by unique dates
+        if (salesList.length === 0) {
+          container.innerHTML = `<div style="text-align: center; padding: 40px; color: var(--text-dim); font-size: 0.85rem;">Tiada rekod jualan untuk dipaparkan.</div>`;
+          document.getElementById('daily-chart-total').textContent = 'RM 0.00';
+          return;
+        }
+
+        const dateMap = {};
+        salesList.forEach(t => {
+          const dStr = t.date.slice(0, 10);
+          dateMap[dStr] = (dateMap[dStr] || 0) + t.amount;
         });
+
+        const sortedDates = Object.keys(dateMap).sort();
+        sortedDates.forEach(dStr => {
+          const [y, m, d] = dStr.split('-').map(Number);
+          const dt = new Date(y, m - 1, d, 0, 0, 0);
+          const isCurrentToday = dt.getTime() === today.getTime();
+          days.push({
+            dateObj: dt,
+            dayName: dt.toLocaleDateString('en-MY', { weekday: 'short' }),
+            dayNum: dt.getDate(),
+            fullDate: dt.toLocaleDateString('en-MY', { day: 'numeric', month: 'short' }),
+            total: dateMap[dStr],
+            isToday: isCurrentToday
+          });
+        });
+      }
+
+      if (days.length === 0) {
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: var(--text-dim); font-size: 0.85rem;">Tiada jualan dalam julat tarikh ini.</div>`;
+        document.getElementById('daily-chart-total').textContent = 'RM 0.00';
+        return;
       }
 
       const maxVal = Math.max(...days.map(d => d.total), 1);
@@ -2577,13 +3178,13 @@
       if (totalEl) totalEl.textContent = formatCurrency(grandTotal);
 
       const barsHTML = days.map((d, idx) => {
-        const pct = d.total > 0 ? Math.max((d.total / maxVal) * 100, 4) : 0;
+        const pct = d.total > 0 ? Math.max((d.total / maxVal) * 100, 5) : 0;
         const valueLabel = d.total > 0
           ? `<span class="daily-bar-value">${d.total >= 1000 ? (d.total / 1000).toFixed(1) + 'k' : d.total.toFixed(0)}</span>`
           : '';
-        const delay = idx * 0.06;
+        const delay = Math.min(idx * 0.04, 0.6);
         return `
-          <div class="daily-bar-col">
+          <div class="daily-bar-col" title="${d.fullDate}: ${formatCurrency(d.total)}">
             <div class="daily-bar-wrap">
               <div class="daily-bar ${d.isToday ? 'is-today' : ''}" style="height: ${pct}%; animation-delay: ${delay}s">
                 ${valueLabel}
@@ -2596,6 +3197,12 @@
       }).join('');
 
       container.innerHTML = `<div class="daily-chart-bars">${barsHTML}</div>`;
+
+      // Auto scroll to the end (most recent day)
+      const wrapper = document.querySelector('.chart-scroll-wrapper');
+      if (wrapper) {
+        setTimeout(() => { wrapper.scrollLeft = wrapper.scrollWidth; }, 50);
+      }
     }
 
     function renderDashboard() {
@@ -2654,6 +3261,14 @@
       const el = document.createElement('div');
       el.className = 'tx-item';
       el.onclick = () => openDetailModal(tx.id);
+
+      let receiptTag = '';
+      if (tx.receipt) {
+        receiptTag = `<span class="receipt-indicator-tag" onclick="event.stopPropagation(); openLightbox('${tx.receipt}', 'Resit: ${escapeHTML(tx.details)}')">📷 Slip (Zoom)</span>`;
+      } else if (tx.type === 'expense' && tx.noReceipt) {
+        receiptTag = '<span class="no-receipt-indicator-tag">✓ Tiada resit</span>';
+      }
+
       el.innerHTML = `
         <div class="tx-left">
           <div class="tx-icon-pill ${isSale ? 'sale' : 'expense'}">${isSale ? '↑' : '↓'}</div>
@@ -2663,7 +3278,7 @@
               <span>${formatDateDisplay(tx.date)}</span>
               <span>•</span>
               <span>${escapeHTML(tx.category || 'General')}</span>
-              ${tx.receipt ? '<span class="receipt-indicator-tag">📷 Slip</span>' : ''}
+              ${receiptTag}
             </div>
           </div>
         </div>
@@ -2799,15 +3414,23 @@
       const receiptSec = document.getElementById('modal-receipt-section');
       const receiptImg = document.getElementById('modal-receipt-img');
       const receiptMeta = document.getElementById('modal-receipt-meta');
+      const noReceiptInfo = document.getElementById('modal-no-receipt-info');
 
       if (tx.receipt) {
         receiptImg.src = tx.receipt;
         receiptSec.style.display = 'block';
-        receiptMeta.textContent = `Base64 • ${base64SizeKB(tx.receipt)} KB`;
+        receiptMeta.textContent = `Base64 • ${base64SizeKB(tx.receipt)} KB • Tekan gambar untuk skrin penuh`;
+        noReceiptInfo.style.display = 'none';
+      } else if (!isSale && tx.noReceipt) {
+        receiptSec.style.display = 'none';
+        receiptImg.src = '';
+        receiptMeta.textContent = '';
+        noReceiptInfo.style.display = 'block';
       } else {
         receiptSec.style.display = 'none';
         receiptImg.src = '';
         receiptMeta.textContent = '';
+        noReceiptInfo.style.display = 'none';
       }
       document.getElementById('detail-modal').classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -2902,15 +3525,15 @@
 
       const channelKeys = Object.keys(channelTotals).sort((a, b) => channelTotals[b] - channelTotals[a]);
       const channelHTML = channelKeys.length === 0 ? '' : `
-        <h3 class="rpt-h3">Payment Channel Breakdown</h3>
-        <table class="rpt-table">
-          <thead><tr><th>Channel</th><th class="rpt-num">Amount</th><th class="rpt-num">Share</th></tr></thead>
+        <h3 class="rpt-h3" style="font-size:12px;font-weight:800;margin:18px 0 8px 0;text-transform:uppercase;">Payment Channel Breakdown</h3>
+        <table class="rpt-table" style="width:100%;border-collapse:collapse;font-size:11px;">
+          <thead><tr><th style="background:#f1f1f1;padding:7px;border:1px solid #ccc;">Channel</th><th style="background:#f1f1f1;padding:7px;border:1px solid #ccc;text-align:right;">Amount</th><th style="background:#f1f1f1;padding:7px;border:1px solid #ccc;text-align:right;">Share</th></tr></thead>
           <tbody>
             ${channelKeys.map(c => `
               <tr>
-                <td>${escapeHTML(c)}</td>
-                <td class="rpt-num">${formatCurrency(channelTotals[c])}</td>
-                <td class="rpt-num">${total > 0 ? ((channelTotals[c] / total) * 100).toFixed(1) : '0.0'}%</td>
+                <td style="padding:7px;border:1px solid #ddd;">${escapeHTML(c)}</td>
+                <td style="padding:7px;border:1px solid #ddd;text-align:right;">${formatCurrency(channelTotals[c])}</td>
+                <td style="padding:7px;border:1px solid #ddd;text-align:right;">${total > 0 ? ((channelTotals[c] / total) * 100).toFixed(1) : '0.0'}%</td>
               </tr>`).join('')}
           </tbody>
         </table>`;
@@ -2918,51 +3541,50 @@
       const userLine = STATE.user ? ' • ' + escapeHTML(STATE.user.email) : '';
 
       return `
-        <div class="rpt-header">
-          <div class="rpt-brand">AISHKERIM</div>
-          <div class="rpt-tagline">Smart Financial Hub — Sales Report (MYR)</div>
+        <div style="border-bottom:3px solid #7c3aed;padding-bottom:10px;margin-bottom:18px;">
+          <div style="font-size:22px;font-weight:900;letter-spacing:3px;color:#7c3aed;">AISHKERIM</div>
+          <div style="font-size:10px;color:#666;letter-spacing:1px;text-transform:uppercase;margin-top:2px;font-weight:700;">Smart Financial Hub — Sales Report (MYR)</div>
         </div>
-        <div class="rpt-title-block">
-          <h1 class="rpt-h1">${reportTitle}</h1>
-          <div class="rpt-period">${escapeHTML(periodLabel)}</div>
-          <div class="rpt-generated">Generated: ${new Date().toLocaleString('en-MY')}${userLine}</div>
+        <div style="margin-bottom:18px;">
+          <h1 style="font-size:17px;font-weight:800;color:#111;">${reportTitle}</h1>
+          <div style="font-size:13px;font-weight:700;color:#333;margin-top:4px;">${escapeHTML(periodLabel)}</div>
+          <div style="font-size:10.5px;color:#666;margin-top:3px;">Generated: ${new Date().toLocaleString('en-MY')}${userLine}</div>
         </div>
-        <div class="rpt-stats">
-          <div class="rpt-stat">
-            <div class="rpt-stat-label">Total Sales</div>
-            <div class="rpt-stat-value">${formatCurrency(total)}</div>
+        <div style="display:flex;gap:10px;margin-bottom:20px;">
+          <div style="flex:1;border:1px solid #ccc;border-radius:8px;padding:10px 12px;">
+            <div style="font-size:9.5px;text-transform:uppercase;color:#666;font-weight:700;">Total Sales</div>
+            <div style="font-size:16px;font-weight:800;color:#111;margin-top:4px;">${formatCurrency(total)}</div>
           </div>
-          <div class="rpt-stat">
-            <div class="rpt-stat-label">Transactions</div>
-            <div class="rpt-stat-value">${count}</div>
+          <div style="flex:1;border:1px solid #ccc;border-radius:8px;padding:10px 12px;">
+            <div style="font-size:9.5px;text-transform:uppercase;color:#666;font-weight:700;">Transactions</div>
+            <div style="font-size:16px;font-weight:800;color:#111;margin-top:4px;">${count}</div>
           </div>
-          <div class="rpt-stat">
-            <div class="rpt-stat-label">Average Ticket</div>
-            <div class="rpt-stat-value">${formatCurrency(avg)}</div>
+          <div style="flex:1;border:1px solid #ccc;border-radius:8px;padding:10px 12px;">
+            <div style="font-size:9.5px;text-transform:uppercase;color:#666;font-weight:700;">Average Ticket</div>
+            <div style="font-size:16px;font-weight:800;color:#111;margin-top:4px;">${formatCurrency(avg)}</div>
           </div>
         </div>
-        <h3 class="rpt-h3">Sales Transactions</h3>
-        <table class="rpt-table">
+        <table style="width:100%;border-collapse:collapse;font-size:11px;">
           <thead>
             <tr>
-              <th style="width:32px;">#</th>
-              <th>Date</th>
-              <th>Details</th>
-              <th>Channel</th>
-              <th class="rpt-num">Amount</th>
+              <th style="width:32px;background:#f1f1f1;padding:7px;border:1px solid #ccc;">#</th>
+              <th style="background:#f1f1f1;padding:7px;border:1px solid #ccc;">Date</th>
+              <th style="background:#f1f1f1;padding:7px;border:1px solid #ccc;">Details</th>
+              <th style="background:#f1f1f1;padding:7px;border:1px solid #ccc;">Channel</th>
+              <th style="background:#f1f1f1;padding:7px;border:1px solid #ccc;text-align:right;">Amount</th>
             </tr>
           </thead>
           <tbody>${rowsHTML}</tbody>
           ${count > 0 ? `
           <tfoot>
             <tr>
-              <td colspan="4" class="rpt-num"><strong>Total</strong></td>
-              <td class="rpt-num"><strong>${formatCurrency(total)}</strong></td>
+              <td colspan="4" style="padding:7px;border:1px solid #ddd;text-align:right;background:#f8f8f8;"><strong>Total</strong></td>
+              <td style="padding:7px;border:1px solid #ddd;text-align:right;background:#f8f8f8;"><strong>${formatCurrency(total)}</strong></td>
             </tr>
           </tfoot>` : ''}
         </table>
         ${channelHTML}
-        <div class="rpt-footer">
+        <div style="margin-top:26px;border-top:1px solid #ccc;padding-top:8px;font-size:9.5px;color:#777;text-align:center;">
           AISHKERIM • This report was generated automatically from your bookkeeping records.
         </div>`;
     }
@@ -2975,12 +3597,15 @@
     }
 
     Object.assign(window, {
+      STATE,
       setAuthMode, handleAuthSubmit, logout, openLogoutModal, closeLogoutModal,
       switchTab, triggerReceiptCapture, handleReceiptFile, clearReceipt,
       saveSale, saveExpense, confirmDeleteSelectedTx,
       openDetailModal, closeDetailModal, closeConfirmModal,
       setHistoryFilter, renderHistoryList, exportDataJSON, exportSalesPDF,
-      toggleTheme, openFabModal, closeFabModal
+      toggleTheme, openFabModal, closeFabModal, toggleNoReceipt,
+      setChartMode, openDateFilterModal, closeDateFilterModal, applyCustomDateFilter,
+      openLightbox, closeLightbox, downloadLightboxImage, triggerSelectedTxLightbox
     });
 
     const todayStr = formatDateForInput();
