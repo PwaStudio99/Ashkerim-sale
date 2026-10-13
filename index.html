@@ -1776,13 +1776,9 @@
         </div>
 
         <div style="display: flex; gap: 8px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-subtle);">
-          <button class="btn btn-secondary" style="font-size: 0.74rem; padding: 10px 8px;" onclick="exportSalesPDF('daily')">
+          <button class="btn btn-sales" style="font-size: 0.8rem; padding: 12px 8px;" onclick="openPdfDateModal()">
             <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            <span>Daily PDF</span>
-          </button>
-          <button class="btn btn-secondary" style="font-size: 0.74rem; padding: 10px 8px;" onclick="exportSalesPDF('monthly')">
-            <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            <span>Monthly PDF</span>
+            <span>Export Sales PDF (Pilih Tarikh)</span>
           </button>
         </div>
       </div>
@@ -1975,17 +1971,15 @@
 
       <div class="glass-card">
         <div class="card-title"><span>Sales Report (PDF)</span></div>
-        <p style="font-size: 0.75rem; color: var(--text-dim); margin: 6px 0 14px 0;">Export a printable PDF of today's or this month's sales summary.</p>
-        <div style="display: flex; gap: 10px;">
-          <button class="btn btn-secondary" style="font-size: 0.8rem;" onclick="exportSalesPDF('daily')">
-            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            <span>Daily PDF</span>
-          </button>
-          <button class="btn btn-secondary" style="font-size: 0.8rem;" onclick="exportSalesPDF('monthly')">
-            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            <span>Monthly PDF</span>
-          </button>
-        </div>
+        <p style="font-size: 0.75rem; color: var(--text-dim); margin: 6px 0 14px 0;">
+          Eksport laporan jualan PDF. Pilih julat tarikh (harian, mingguan, bulanan atau custom).
+        </p>
+        <button class="btn btn-sales" onclick="openPdfDateModal()" style="font-size: 0.88rem;">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          <span>Export Sales Report PDF</span>
+        </button>
       </div>
 
       <div class="glass-card" style="text-align: center;">
@@ -2031,6 +2025,56 @@
         <span>Reports</span>
       </button>
     </nav>
+  </div>
+
+  <!-- =============================================
+       PDF EXPORT DATE RANGE MODAL (BARU)
+       ============================================= -->
+  <div id="pdf-date-modal" class="modal-overlay" onclick="closePdfDateModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-handle"></div>
+      <div class="modal-header-row">
+        <h3 class="modal-title-sales">Export Sales Report (PDF)</h3>
+        <button onclick="closePdfDateModal()" class="avatar-btn" style="width: 30px; height: 30px; font-size: 0.8rem;">✕</button>
+      </div>
+      <p class="modal-subtitle">Pilih julat tarikh untuk laporan jualan PDF.</p>
+
+      <div class="form-group">
+        <label class="form-label">Pilihan Pantas</label>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <button type="button" class="chart-pill-btn" onclick="quickPdfRange('today')">Hari Ini</button>
+          <button type="button" class="chart-pill-btn" onclick="quickPdfRange('7d')">7 Hari</button>
+          <button type="button" class="chart-pill-btn" onclick="quickPdfRange('30d')">30 Hari</button>
+          <button type="button" class="chart-pill-btn" onclick="quickPdfRange('month')">Bulan Ini</button>
+          <button type="button" class="chart-pill-btn" onclick="quickPdfRange('lastmonth')">Bulan Lepas</button>
+        </div>
+      </div>
+
+      <form onsubmit="applyPdfDateRange(event)">
+        <div class="form-group">
+          <label class="form-label" for="pdf-start-date">Dari Tarikh</label>
+          <input type="date" id="pdf-start-date" class="form-input" required onchange="updatePdfRangeSummary()">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="pdf-end-date">Hingga Tarikh</label>
+          <input type="date" id="pdf-end-date" class="form-input" required onchange="updatePdfRangeSummary()">
+        </div>
+
+        <div id="pdf-range-summary" style="font-size:0.78rem;color:var(--text-muted);margin-bottom:14px;text-align:center;font-weight:600;background:var(--bg-card);border:1px solid var(--border-glass);padding:10px;border-radius:12px;">
+          0 transaksi • RM 0.00
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button type="button" class="btn btn-secondary" onclick="closePdfDateModal()">Batal</button>
+          <button type="submit" class="btn btn-sales">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <span>Jana PDF</span>
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <!-- DATE FILTER MODAL FOR CHART -->
@@ -2341,8 +2385,7 @@
       transactions: [],
       unsubscribeTx: null,
       theme: (document.documentElement.getAttribute('data-theme') || 'dark'),
-      // Chart filtering state
-      chartMode: '7d', // '7d', '30d', 'all', 'custom'
+      chartMode: '7d',
       customDateRange: { start: null, end: null },
       activeLightboxImage: null
     };
@@ -3136,7 +3179,6 @@
           cur.setDate(cur.getDate() + 1);
         }
       } else if (STATE.chartMode === 'all') {
-        // Group all recorded sales by unique dates
         if (salesList.length === 0) {
           container.innerHTML = `<div style="text-align: center; padding: 40px; color: var(--text-dim); font-size: 0.85rem;">Tiada rekod jualan untuk dipaparkan.</div>`;
           document.getElementById('daily-chart-total').textContent = 'RM 0.00';
@@ -3198,7 +3240,6 @@
 
       container.innerHTML = `<div class="daily-chart-bars">${barsHTML}</div>`;
 
-      // Auto scroll to the end (most recent day)
       const wrapper = document.querySelector('.chart-scroll-wrapper');
       if (wrapper) {
         setTimeout(() => { wrapper.scrollLeft = wrapper.scrollWidth; }, 50);
@@ -3479,7 +3520,105 @@
       finally { document.body.removeChild(tempTextArea); }
     }
 
-    function buildSalesReportHTML(period) {
+    /* ==========================================================
+       PDF EXPORT DENGAN PILIHAN TARIKH (BARU)
+       ========================================================== */
+    function openPdfDateModal() {
+      const startInp = document.getElementById('pdf-start-date');
+      const endInp = document.getElementById('pdf-end-date');
+      const today = formatDateForInput();
+
+      if (!startInp.value) {
+        const d = new Date();
+        d.setDate(d.getDate() - 6);
+        startInp.value = formatDateForInput(d);
+      }
+      if (!endInp.value) endInp.value = today;
+
+      updatePdfRangeSummary();
+      document.getElementById('pdf-date-modal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closePdfDateModal() {
+      document.getElementById('pdf-date-modal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function quickPdfRange(type) {
+      const today = new Date();
+      let start = new Date(today), end = new Date(today);
+
+      if (type === 'today') {
+        start = new Date(today); end = new Date(today);
+      } else if (type === '7d') {
+        start = new Date(today); start.setDate(start.getDate() - 6);
+        end = new Date(today);
+      } else if (type === '30d') {
+        start = new Date(today); start.setDate(start.getDate() - 29);
+        end = new Date(today);
+      } else if (type === 'month') {
+        start = new Date(today.getFullYear(), today.getMonth(), 1);
+        end = new Date(today);
+      } else if (type === 'lastmonth') {
+        start = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+        end = new Date(today.getFullYear(), today.getMonth(), 0);
+      }
+
+      document.getElementById('pdf-start-date').value = formatDateForInput(start);
+      document.getElementById('pdf-end-date').value = formatDateForInput(end);
+      updatePdfRangeSummary();
+    }
+
+    function getSalesInRange(startStr, endStr) {
+      if (!startStr || !endStr) return [];
+      const [sy, sm, sd] = startStr.split('-').map(Number);
+      const [ey, em, ed] = endStr.split('-').map(Number);
+      const start = new Date(sy, sm - 1, sd, 0, 0, 0, 0);
+      const end = new Date(ey, em - 1, ed, 23, 59, 59, 999);
+
+      return STATE.transactions
+        .filter(t => t.type === 'sale')
+        .filter(t => {
+          const d = new Date(t.date);
+          return d >= start && d <= end;
+        })
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+    }
+
+    function updatePdfRangeSummary() {
+      const s = document.getElementById('pdf-start-date').value;
+      const e = document.getElementById('pdf-end-date').value;
+      const el = document.getElementById('pdf-range-summary');
+      if (!s || !e || !el) return;
+
+      if (new Date(s) > new Date(e)) {
+        el.textContent = '⚠️ Tarikh mula melebihi tarikh akhir';
+        el.style.color = 'var(--accent-expense)';
+        return;
+      }
+
+      const sales = getSalesInRange(s, e);
+      const total = sales.reduce((sum, t) => sum + t.amount, 0);
+      el.textContent = `${sales.length} transaksi • ${formatCurrency(total)}`;
+      el.style.color = 'var(--accent-sales)';
+    }
+
+    function applyPdfDateRange(ev) {
+      if (ev) ev.preventDefault();
+      const s = document.getElementById('pdf-start-date').value;
+      const e = document.getElementById('pdf-end-date').value;
+
+      if (!s || !e) { showToast('Sila pilih kedua-dua tarikh', '⚠️'); return; }
+      if (new Date(s) > new Date(e)) {
+        showToast('Tarikh mula tidak boleh melebihi tarikh akhir', '⚠️'); return;
+      }
+
+      closePdfDateModal();
+      setTimeout(() => exportSalesPDF('custom', s, e), 300);
+    }
+
+    function buildSalesReportHTML(period, startStr, endStr) {
       const now = new Date();
       const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
       const salesAll = STATE.transactions.filter(t => t.type === 'sale');
@@ -3491,14 +3630,32 @@
                                d.getMonth() === now.getMonth();
 
       let reportTitle, periodLabel, list;
+
       if (period === 'daily') {
         reportTitle = 'DAILY SALES SUMMARY';
         periodLabel = now.toLocaleDateString('en-MY', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
         list = salesAll.filter(t => isSameDay(new Date(t.date)));
-      } else {
+      } else if (period === 'monthly') {
         reportTitle = 'MONTHLY SALES SUMMARY';
         periodLabel = `${monthNames[now.getMonth()]} ${now.getFullYear()}`;
         list = salesAll.filter(t => isSameMonth(new Date(t.date)));
+      } else if (period === 'custom' && startStr && endStr) {
+        reportTitle = 'CUSTOM RANGE SALES REPORT';
+        const [sy, sm, sd] = startStr.split('-').map(Number);
+        const [ey, em, ed] = endStr.split('-').map(Number);
+        const sDate = new Date(sy, sm - 1, sd);
+        const eDate = new Date(ey, em - 1, ed);
+
+        periodLabel =
+          sDate.toLocaleDateString('en-MY', { day: 'numeric', month: 'long', year: 'numeric' }) +
+          '  —  ' +
+          eDate.toLocaleDateString('en-MY', { day: 'numeric', month: 'long', year: 'numeric' });
+
+        list = getSalesInRange(startStr, endStr);
+      } else {
+        reportTitle = 'SALES REPORT';
+        periodLabel = 'All Time';
+        list = salesAll.slice();
       }
 
       list = list.slice().sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -3513,21 +3670,25 @@
       });
 
       const rowsHTML = count === 0
-        ? `<tr><td colspan="5" style="text-align:center;padding:18px;color:#666;">No sales recorded for this period.</td></tr>`
+        ? `<tr><td colspan="5" style="text-align:center;padding:18px;color:#666;">Tiada rekod jualan untuk julat ini.</td></tr>`
         : list.map((t, i) => `
             <tr>
               <td>${i + 1}</td>
               <td>${escapeHTML(formatDateDisplay(t.date))}</td>
               <td>${escapeHTML(t.details)}</td>
               <td>${escapeHTML(t.category || 'General')}</td>
-              <td class="rpt-num">${formatCurrency(t.amount)}</td>
+              <td class="rpt-num" style="text-align:right;">${formatCurrency(t.amount)}</td>
             </tr>`).join('');
 
       const channelKeys = Object.keys(channelTotals).sort((a, b) => channelTotals[b] - channelTotals[a]);
       const channelHTML = channelKeys.length === 0 ? '' : `
-        <h3 class="rpt-h3" style="font-size:12px;font-weight:800;margin:18px 0 8px 0;text-transform:uppercase;">Payment Channel Breakdown</h3>
-        <table class="rpt-table" style="width:100%;border-collapse:collapse;font-size:11px;">
-          <thead><tr><th style="background:#f1f1f1;padding:7px;border:1px solid #ccc;">Channel</th><th style="background:#f1f1f1;padding:7px;border:1px solid #ccc;text-align:right;">Amount</th><th style="background:#f1f1f1;padding:7px;border:1px solid #ccc;text-align:right;">Share</th></tr></thead>
+        <h3 style="font-size:12px;font-weight:800;margin:18px 0 8px 0;text-transform:uppercase;">Payment Channel Breakdown</h3>
+        <table style="width:100%;border-collapse:collapse;font-size:11px;">
+          <thead><tr>
+            <th style="background:#f1f1f1;padding:7px;border:1px solid #ccc;">Channel</th>
+            <th style="background:#f1f1f1;padding:7px;border:1px solid #ccc;text-align:right;">Amount</th>
+            <th style="background:#f1f1f1;padding:7px;border:1px solid #ccc;text-align:right;">Share</th>
+          </tr></thead>
           <tbody>
             ${channelKeys.map(c => `
               <tr>
@@ -3589,10 +3750,16 @@
         </div>`;
     }
 
-    function exportSalesPDF(period) {
+    function exportSalesPDF(period, startStr, endStr) {
       const container = document.getElementById('print-report');
-      container.innerHTML = buildSalesReportHTML(period);
-      showToast(period === 'daily' ? 'Preparing Daily Sales PDF…' : 'Preparing Monthly Sales PDF…', '📄');
+      container.innerHTML = buildSalesReportHTML(period, startStr, endStr);
+
+      let msg = 'Menjana PDF…';
+      if (period === 'daily') msg = 'Preparing Daily Sales PDF…';
+      else if (period === 'monthly') msg = 'Preparing Monthly Sales PDF…';
+      else if (period === 'custom') msg = `Preparing PDF: ${startStr} → ${endStr}…`;
+
+      showToast(msg, '📄');
       setTimeout(() => window.print(), 350);
     }
 
@@ -3605,7 +3772,10 @@
       setHistoryFilter, renderHistoryList, exportDataJSON, exportSalesPDF,
       toggleTheme, openFabModal, closeFabModal, toggleNoReceipt,
       setChartMode, openDateFilterModal, closeDateFilterModal, applyCustomDateFilter,
-      openLightbox, closeLightbox, downloadLightboxImage, triggerSelectedTxLightbox
+      openLightbox, closeLightbox, downloadLightboxImage, triggerSelectedTxLightbox,
+      // BAHARU:
+      openPdfDateModal, closePdfDateModal, quickPdfRange, applyPdfDateRange,
+      updatePdfRangeSummary, getSalesInRange
     });
 
     const todayStr = formatDateForInput();
